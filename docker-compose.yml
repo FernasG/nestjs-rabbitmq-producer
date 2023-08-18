@@ -1,0 +1,30 @@
+version: '3.9'
+
+networks:
+  nestjs-rabbitmq-network:
+    name: nestjs-rabbitmq-network
+    driver: bridge
+
+services:
+  nestjs-rabbitmq:
+    build: .
+    container_name: nestjs-rabbitmq
+    image: nestjs-rabbitmq:latest
+    env_file:
+      - .env
+    environment:
+      - TZ=America/Sao_Paulo
+    volumes:
+      - ${PWD}:/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - rabbitmq
+    networks:
+      - nestjs-rabbitmq-network
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq
+    networks:
+      - nestjs-rabbitmq-network
